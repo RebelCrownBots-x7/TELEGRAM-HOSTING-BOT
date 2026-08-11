@@ -1,0 +1,21 @@
+# Render Blueprint — https://render.com
+services:
+  - type: web
+    name: rebel-crown-hosting
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: ADMIN_IDS
+        sync: false
+      - key: HEALTH_SERVER
+        value: "1"
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    disk:
+      name: rebel-data
+      mountPath: /app/data
+      sizeGB: 1

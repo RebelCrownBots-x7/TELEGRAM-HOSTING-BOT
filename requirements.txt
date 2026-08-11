@@ -1,0 +1,9 @@
+# Termux / Android compatible — no psutil (Android unsupported)
+# cryptography is OPTIONAL (stdlib token encryption is built-in)
+# >=4.30.0 is a floor for API compat; upgrade to the LATEST pyTelegramBotAPI
+# release you can (`pip install --upgrade pyTelegramBotAPI`) to get native
+# colored buttons (Bot API 9.4 "style" field on Keyboard/InlineKeyboardButton).
+# Buttons degrade gracefully (color-circle emoji only) on older installs.
+pyTelegramBotAPI>=4.30.0,<5
+python-dotenv>=1.0.0
+requests>=2.28.0
