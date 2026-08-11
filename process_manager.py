@@ -354,11 +354,13 @@ def start_bot(bot_id: str, *, clear_manual_stop: bool = True) -> tuple[bool, str
     env["PYTHONUNBUFFERED"] = "1"
     env["HOME"] = str(runtime)
 
-    import shutil
+        import shutil
     file_type = (bot.get("file_type") or "PY").upper()
 
-    if file_type == "ZIP" and file_path.is_dir():
+    # file_type যাই হোক না কেন, পাথটি যদি ফোল্ডার হয় তবে সিস্টেম একে ZIP প্রোজেক্ট হিসেবেই রান করবে
+    if file_path.is_dir():
         entry_rel = bot.get("entry_file") or "main.py"
+
         project_in_runtime = runtime / "project"
         try:
             if project_in_runtime.exists():
