@@ -104,15 +104,26 @@ def register(bot):
 
         if action == "adm_file":
             path = Path(req["file_path"])
-            if path.exists():
-                try:
+            try:
+                if path.is_dir():
+                    # ZIP project — file_path is the extracted project dir,
+                    # so send the preserved original zip instead.
+                    original_dir = path.parent / "__original__"
+                    zips = list(original_dir.glob("*.zip")) if original_dir.exists() else []
+                    if not zips:
+                        bot.answer_callback_query(call.id, "Original ZIP not found", show_alert=True)
+                        return
+                    with open(zips[0], "rb") as f:
+                        bot.send_document(call.message.chat.id, f, caption=f"📦 {req.get('original_filename')}\nID: {rid}")
+                    bot.answer_callback_query(call.id, "Sent")
+                elif path.exists():
                     with open(path, "rb") as f:
                         bot.send_document(call.message.chat.id, f, caption=f"📂 {req.get('original_filename')}\nID: {rid}")
                     bot.answer_callback_query(call.id, "Sent")
-                except Exception as e:
-                    bot.answer_callback_query(call.id, str(e)[:100], show_alert=True)
-            else:
-                bot.answer_callback_query(call.id, "File missing", show_alert=True)
+                else:
+                    bot.answer_callback_query(call.id, "File missing", show_alert=True)
+            except Exception as e:
+                bot.answer_callback_query(call.id, str(e)[:100], show_alert=True)
 
         elif action == "adm_userreq":
             user = get_user(req["user_id"])
